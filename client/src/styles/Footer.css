@@ -1,0 +1,6 @@
+/* Footer Component Styles */
+.footer-container {
+  @apply bg-white border-t border-gray-200 px-4 py-2;
+}
+
+/* Footer is minimal as main footer content is in sidebar */

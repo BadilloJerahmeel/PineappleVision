@@ -1,0 +1,72 @@
+/* Home Component Styles */
+.home-page {
+  @apply flex-1 overflow-auto;
+}
+
+.home-content {
+  @apply space-y-0;
+}
+
+.content-grid {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-8 px-8 pb-8;
+}
+
+.upload-section {
+  @apply space-y-6;
+}
+
+.insights-section {
+  @apply space-y-6;
+}
+
+.insights-card {
+  @apply bg-white rounded-lg p-6 shadow-lg;
+}
+
+.insights-title {
+  @apply text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2;
+}
+
+.title-icon {
+  @apply w-5 h-5;
+}
+
+.insights-content {
+  @apply space-y-6;
+}
+
+.insight-item {
+  @apply space-y-3;
+}
+
+.insight-header {
+  @apply flex items-center justify-between;
+}
+
+.method-name {
+  @apply text-sm font-medium text-gray-800;
+}
+
+.disease-rate {
+  @apply text-xs text-gray-500;
+}
+
+.progress-container {
+  @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+.progress-bar {
+  @apply h-2 rounded-full;
+}
+
+.progress-primary {
+  @apply bg-green-500;
+}
+
+.progress-secondary {
+  @apply bg-blue-500;
+}
+
+.insight-description {
+  @apply text-xs text-gray-600;
+}

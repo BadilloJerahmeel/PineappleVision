@@ -1,0 +1,32 @@
+/* HeroSection Component Styles */
+.hero-section {
+  @apply bg-white border-b border-gray-200 px-8 py-6;
+}
+
+.hero-content {
+  @apply flex items-center justify-between;
+}
+
+.hero-text {
+  @apply flex-1;
+}
+
+.hero-title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.hero-description {
+  @apply text-gray-600 mt-1;
+}
+
+.hero-actions {
+  @apply flex items-center space-x-4;
+}
+
+.refresh-button {
+  @apply px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all flex items-center space-x-2;
+}
+
+.refresh-icon {
+  @apply w-4 h-4;
+}

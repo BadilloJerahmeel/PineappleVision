@@ -1,0 +1,64 @@
+/* ReportSummary Component Styles */
+.report-summary {
+  @apply bg-white border-b border-gray-200 px-8 py-6;
+}
+
+.summary-header {
+  @apply flex items-center justify-between mb-8;
+}
+
+.header-content {
+  @apply flex-1;
+}
+
+.summary-title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.summary-description {
+  @apply text-gray-600 mt-1;
+}
+
+.header-controls {
+  @apply flex items-center space-x-4;
+}
+
+.control-select {
+  @apply px-4 py-2 border border-gray-300 rounded-lg text-sm;
+}
+
+.summary-cards {
+  @apply grid grid-cols-1 md:grid-cols-4 gap-6;
+}
+
+.summary-card {
+  @apply bg-white rounded-lg p-6 shadow-lg;
+}
+
+.card-content {
+  @apply flex items-center space-x-3;
+}
+
+.card-icon {
+  @apply w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.icon {
+  @apply w-5 h-5;
+}
+
+.card-info {
+  @apply flex-1;
+}
+
+.card-value {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.card-title {
+  @apply text-sm text-gray-600;
+}
+
+.card-subtitle {
+  @apply text-xs text-gray-500;
+}

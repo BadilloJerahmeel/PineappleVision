@@ -1,0 +1,65 @@
+/* Header Component Styles */
+.header-container {
+  @apply w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col;
+}
+
+.logo-section {
+  @apply p-6 border-b border-gray-200;
+}
+
+.logo-wrapper {
+  @apply flex items-center space-x-3;
+}
+
+.logo-icon {
+  @apply w-8 h-8 bg-primary rounded-lg flex items-center justify-center;
+}
+
+.leaf-icon {
+  @apply text-white text-sm;
+}
+
+.logo-text {
+  @apply flex flex-col;
+}
+
+.brand-name {
+  @apply text-lg font-bold text-gray-800;
+}
+
+.brand-tagline {
+  @apply text-xs text-gray-500;
+}
+
+.nav-container {
+  @apply flex-1 px-4 py-6 space-y-2;
+}
+
+.nav-item {
+  @apply w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200;
+}
+
+.nav-item.active {
+  background: linear-gradient(90deg, hsl(79, 33%, 39%) 0%, hsl(82, 35%, 55%) 100%);
+  @apply text-white;
+}
+
+.nav-item.active:hover {
+  @apply bg-opacity-90;
+}
+
+.nav-icon {
+  @apply w-5 h-5;
+}
+
+.nav-label {
+  @apply font-medium;
+}
+
+.header-footer {
+  @apply p-4 border-t border-gray-200;
+}
+
+.copyright {
+  @apply text-xs text-gray-500;
+}

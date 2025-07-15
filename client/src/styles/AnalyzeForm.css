@@ -1,0 +1,72 @@
+/* AnalyzeForm Component Styles */
+.analyze-form {
+  @apply bg-white rounded-lg p-6 shadow-lg;
+}
+
+.form-title {
+  @apply text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2;
+}
+
+.form-icon {
+  @apply w-5 h-5;
+}
+
+.upload-mode-selector {
+  @apply flex space-x-4 mb-6;
+}
+
+.mode-button {
+  @apply px-4 py-2 rounded-lg transition-all;
+}
+
+.mode-button:not(.active) {
+  @apply bg-gray-100 text-gray-700;
+}
+
+.mode-button.active {
+  @apply bg-green-100 text-green-700;
+}
+
+.upload-area {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-12 text-center;
+}
+
+.upload-icon {
+  @apply mb-4;
+}
+
+.upload-icon-svg {
+  @apply w-12 h-12 text-gray-400 mx-auto;
+}
+
+.upload-title {
+  @apply text-lg font-medium text-gray-800 mb-2;
+}
+
+.upload-description {
+  @apply text-gray-600 mb-4;
+}
+
+.upload-button {
+  @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-all cursor-pointer flex items-center space-x-2 mx-auto;
+}
+
+.button-icon {
+  @apply w-4 h-4;
+}
+
+.file-input {
+  @apply hidden;
+}
+
+.upload-note {
+  @apply text-sm text-gray-500 mt-2;
+}
+
+.file-list {
+  @apply mt-4 p-4 bg-gray-50 rounded-lg;
+}
+
+.file-item {
+  @apply text-sm text-gray-600;
+}

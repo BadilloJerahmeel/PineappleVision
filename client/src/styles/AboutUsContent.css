@@ -1,0 +1,108 @@
+/* AboutUsContent Component Styles */
+.about-content {
+  @apply flex-1 overflow-auto;
+}
+
+.about-header {
+  @apply bg-white border-b border-gray-200 px-8 py-6 text-center;
+}
+
+.about-title {
+  @apply text-3xl font-bold text-gray-800;
+}
+
+.about-description {
+  @apply text-gray-600 mt-2 max-w-2xl mx-auto;
+}
+
+.mission-cards {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8 p-8;
+}
+
+.mission-card {
+  @apply bg-white rounded-lg p-8 shadow-lg text-center;
+}
+
+.mission-icon {
+  @apply w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4;
+}
+
+.icon {
+  @apply w-8 h-8;
+}
+
+.mission-title {
+  @apply text-xl font-bold text-gray-800 mb-4;
+}
+
+.mission-description {
+  @apply text-gray-600 text-sm leading-relaxed;
+}
+
+.team-section {
+  @apply bg-white rounded-lg p-8 shadow-lg mx-8 mb-8;
+}
+
+.team-header {
+  @apply text-center mb-8;
+}
+
+.team-title {
+  @apply text-2xl font-bold text-gray-800 mb-2;
+}
+
+.team-description {
+  @apply text-gray-600;
+}
+
+.team-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.team-member {
+  @apply text-center;
+}
+
+.member-photo {
+  @apply w-24 h-24 rounded-full mx-auto mb-4 object-cover;
+}
+
+.member-name {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.member-role {
+  @apply text-sm text-gray-600 mb-2;
+}
+
+.member-description {
+  @apply text-xs text-gray-500 mb-4;
+}
+
+.skills-container {
+  @apply flex flex-wrap justify-center gap-1 mb-3;
+}
+
+.skill-badge {
+  @apply px-2 py-1 text-xs rounded;
+}
+
+.member-social {
+  @apply flex justify-center space-x-3;
+}
+
+.social-link {
+  @apply text-gray-400 hover:text-gray-600 transition-colors;
+}
+
+.social-link.linkedin:hover {
+  @apply text-blue-600;
+}
+
+.social-link.github:hover {
+  @apply text-gray-800;
+}
+
+.social-link.email:hover {
+  @apply text-blue-500;
+}
