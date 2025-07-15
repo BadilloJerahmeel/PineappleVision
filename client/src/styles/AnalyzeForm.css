@@ -70,3 +70,11 @@
 .file-item {
   @apply text-sm text-gray-600;
 }
+
+.submit-section {
+  @apply mt-6 flex justify-center;
+}
+
+.submit-button {
+  @apply bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed;
+}

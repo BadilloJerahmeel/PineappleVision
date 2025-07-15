@@ -52,26 +52,70 @@ const DownloadButton = ({ onPdfDownload, onCsvExport, isLoading }: DownloadButto
 
   /**
    * Handles CSV export
-   * This function would typically export all analysis data to CSV format
+   * This function creates a real CSV file with sample analysis data
    */
   const handleCsvExport = () => {
     if (onCsvExport) {
       onCsvExport();
     } else {
-      // Placeholder implementation for CSV export
       console.log("Exporting CSV data...");
-      // In a real implementation, this would:
-      // 1. Collect all analysis data
-      // 2. Convert to CSV format
-      // 3. Trigger download
       
-      // Mock download for demonstration
+      // Sample analysis data for export
+      const analysisData = [
+        {
+          id: "ANA001",
+          dateTime: "2024-01-15 10:30:00",
+          farmLocation: "Sector A - Calbazon",
+          propagationMethod: "Crown Cutting",
+          diseaseStatus: "Healthy",
+          confidence: "95%",
+          severity: "None",
+          plantCount: 150
+        },
+        {
+          id: "ANA002", 
+          dateTime: "2024-01-15 11:45:00",
+          farmLocation: "Sector B - Calbazon",
+          propagationMethod: "Suckers",
+          diseaseStatus: "Disease Detected",
+          confidence: "87%",
+          severity: "Mild",
+          plantCount: 120
+        },
+        {
+          id: "ANA003",
+          dateTime: "2024-01-15 14:20:00", 
+          farmLocation: "Sector C - Calbazon",
+          propagationMethod: "Crown Cutting",
+          diseaseStatus: "Healthy",
+          confidence: "92%",
+          severity: "None",
+          plantCount: 180
+        }
+      ];
+      
+      // Convert to CSV format
+      const headers = Object.keys(analysisData[0]);
+      const csvContent = [
+        headers.join(','),
+        ...analysisData.map(row => 
+          headers.map(header => `"${row[header as keyof typeof row]}"`).join(',')
+        )
+      ].join('\n');
+      
+      // Create and trigger download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
-      link.href = '#';
+      link.href = URL.createObjectURL(blob);
       link.download = `pineapple-vision-data-${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      // Clean up
+      URL.revokeObjectURL(link.href);
+      
+      alert('CSV file downloaded successfully!');
     }
   };
 

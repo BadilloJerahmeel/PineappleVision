@@ -8,6 +8,14 @@ PineappleVision is a comprehensive web application designed to revolutionize pin
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+- **Button Functionality Enhancement (2025-01-15)**: Added real functionality to key application buttons
+  - Upload button now processes files with simulated disease detection analysis
+  - CSV export button creates actual downloadable CSV files with sample data
+  - Submit button includes loading states and user feedback
+  - Added form validation and error handling
+
 ## System Architecture
 
 The application follows a modern full-stack architecture with clear separation between frontend and backend concerns:

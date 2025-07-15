@@ -28,5 +28,18 @@
 }
 
 .refresh-icon {
-  @apply w-4 h-4;
+  @apply w-4 h-4 transition-transform duration-300;
+}
+
+.refresh-button.refreshing .refresh-icon {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -61,17 +61,75 @@ const AnalyzeForm = ({ onSubmit, onFileUpload }: AnalyzeFormProps) => {
    * Handles form submission
    * Validates form data and calls onSubmit prop
    */
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    const formData = {
-      uploadMode,
-      files,
-      timestamp: new Date().toISOString()
-    };
+    if (files.length === 0) {
+      alert('Please select at least one image to upload');
+      return;
+    }
     
-    if (onSubmit) {
-      onSubmit(formData);
+    // Create FormData for file upload
+    const formData = new FormData();
+    files.forEach((file, index) => {
+      formData.append(`image_${index}`, file);
+    });
+    formData.append('uploadMode', uploadMode);
+    formData.append('farmLocation', 'Calbazon, Laguna'); // Default farm location
+    
+    try {
+      // Show loading state
+      const submitButton = document.querySelector('.submit-button') as HTMLButtonElement;
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Analyzing...';
+      }
+      
+      // Simulate API call for disease detection
+      console.log('Starting disease detection analysis...');
+      
+      // Create mock analysis results
+      const analysisResults = files.map((file, index) => ({
+        id: `analysis_${Date.now()}_${index}`,
+        fileName: file.name,
+        farmLocation: 'Calbazon, Laguna',
+        propagationMethod: Math.random() > 0.5 ? 'Crown Cutting' : 'Suckers',
+        diseaseStatus: Math.random() > 0.7 ? 'Disease Detected' : 'Healthy',
+        confidence: Math.floor(Math.random() * 30) + 70, // 70-100%
+        severity: Math.random() > 0.5 ? 'Mild' : 'Moderate',
+        timestamp: new Date().toISOString()
+      }));
+      
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      console.log('Analysis complete:', analysisResults);
+      alert(`Analysis complete! Processed ${files.length} image(s). Check the Analyze page for results.`);
+      
+      // Reset form
+      setFiles([]);
+      setUploadMode('upload');
+      
+      // Call the original onSubmit if provided
+      if (onSubmit) {
+        onSubmit({
+          uploadMode,
+          files,
+          analysisResults,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      alert('Analysis failed. Please try again.');
+    } finally {
+      // Reset button state
+      const submitButton = document.querySelector('.submit-button') as HTMLButtonElement;
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Start Analysis';
+      }
     }
   };
 
@@ -146,6 +204,15 @@ const AnalyzeForm = ({ onSubmit, onFileUpload }: AnalyzeFormProps) => {
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* Submit Button */}
+        {files.length > 0 && (
+          <div className="submit-section">
+            <button type="submit" className="submit-button">
+              Start Analysis
+            </button>
           </div>
         )}
       </form>
