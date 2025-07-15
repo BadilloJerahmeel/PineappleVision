@@ -1,0 +1,18 @@
+{
+  "versions": [
+    {
+      "version": "v1.0.0-placeholder",
+      "path": "./models/pineapple-disease-detector/v1.0.0/model.h5",
+      "accuracy": 0,
+      "trainingDate": "2025-01-15T00:00:00.000Z",
+      "isActive": false,
+      "metadata": {
+        "trainingDataSize": 0,
+        "epochs": 0,
+        "validationAccuracy": 0,
+        "testAccuracy": 0
+      }
+    }
+  ],
+  "lastUpdated": "2025-01-15T00:00:00.000Z"
+}
