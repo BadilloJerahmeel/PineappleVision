@@ -1,0 +1,247 @@
+I want you to generate a full React project matching these 4 mockups exactly, with no overlap, and full documentation in code comments.
+
+The mockups are:
+
+✅ home.png
+✅ analyze.png (EXCLUDE yield estimate and action button)
+✅ report.png
+✅ aboutus.png
+
+Framework: React (functional components, hooks only).  
+Target: Works perfectly in Replit and VSCode.  
+Folder structure: Very clean and maintainable.
+
+---
+
+### 📁 Project folder structure
+
+Use exactly this:
+
+src/
+  components/
+    Header.jsx
+    Footer.jsx
+    HeroSection.jsx
+    FeaturesSection.jsx
+    AnalyzeForm.jsx
+    AnalysisResults.jsx
+    ReportSummary.jsx
+    ReportDetails.jsx
+    DownloadButton.jsx
+    AboutUsContent.jsx
+  pages/
+    Home.jsx
+    Analyze.jsx
+    Report.jsx
+    AboutUs.jsx
+  App.jsx
+  index.js
+  styles/
+    Header.css
+    Footer.css
+    HeroSection.css
+    FeaturesSection.css
+    AnalyzeForm.css
+    AnalysisResults.css
+    ReportSummary.css
+    ReportDetails.css
+    DownloadButton.css
+    AboutUsContent.css
+
+---
+
+### 🗺️ React Router
+
+- Use react-router-dom for navigation between pages.
+- Define routes for:
+  - "/": Home
+  - "/analyze": Analyze
+  - "/report": Report
+  - "/aboutus": About Us
+- Ensure Header and Footer are persistent on all pages.
+
+---
+
+### 🏠 Home Page (home.png)
+
+Components:
+
+- Header (shared)
+  - Logo on left
+  - Navigation links to Home, Analyze, Report, About Us
+- HeroSection
+  - Large welcome text
+  - Tagline/subtext
+  - Call to action button ("Get Started")
+- FeaturesSection
+  - Grid or cards listing app features with icons and text (e.g. “Smart Analysis”, “Easy Reporting”, “Data Insights”)
+- Footer (shared)
+  - Links or copyright
+
+Document in code:
+- Purpose of each section
+- Props used if any
+- CSS structure
+
+---
+
+### 🔎 Analyze Page (analyze.png)
+
+**Important: EXCLUDE the yield estimate and action button shown in mockup!**
+
+Components:
+
+- Header (shared)
+- AnalyzeForm
+  - Fields for:
+    - Soil data input (textarea or text input)
+    - Crop type input (dropdown or text)
+    - Upload image (optional field if in mockup)
+    - Submit button
+  - Functions:
+    - handleSubmit that triggers analysis
+    - Validates inputs
+- AnalysisResults
+  - Displays returned analysis results
+  - Props-based data
+  - NO yield estimate or action button
+- Footer (shared)
+
+Document in code:
+- Form handling with useState
+- Form validation
+- Passing results to AnalysisResults
+- Explanation of excluded elements
+
+---
+
+### 📑 Report Page (report.png)
+
+Components:
+
+- Header (shared)
+- ReportSummary
+  - User name
+  - Report title
+  - Date/time
+- ReportDetails
+  - Soil data
+  - Recommendations
+  - Notes section
+- DownloadButton
+  - Triggers downloadReport function
+  - Function:
+    - downloadReport that generates PDF or placeholder
+- Footer (shared)
+
+Document in code:
+- How props pass user/report data
+- Functionality of download
+- Styling approach
+
+---
+
+### 👥 About Us Page (aboutus.png)
+
+Components:
+
+- Header (shared)
+- AboutUsContent
+  - Team photo or graphic placeholder
+  - Mission statement
+  - Contact info section
+- Footer (shared)
+
+Document in code:
+- Static text/content
+- Styling suggestions
+
+---
+
+### 🔄 Reusable Components
+
+✅ Header
+  - Navigation links
+  - Logo
+✅ Footer
+  - Basic links
+  - Copyright
+
+Document:
+- How they are imported and reused
+- Styling with CSS
+
+---
+
+### 🧩 Functional Requirements
+
+- Use React functional components only
+- Use React hooks (useState, useEffect as needed)
+- Forms with validation and state
+- Props to pass data
+- React Router for page navigation
+- CSS modules/files for styling
+- Placeholder logic where real backend needed
+
+---
+
+### 🧭 App.jsx
+
+- Include BrowserRouter
+- Include Routes for all pages
+- Include Header and Footer
+- Wrap Routes in a layout that keeps Header/Footer on all pages
+
+---
+
+### 🗂️ CSS
+
+- Each component has its own CSS file in styles/
+- Keep it clean, minimal, responsive-ready
+- Commented CSS for clarity
+
+---
+
+### ⚙️ Additional Instructions
+
+- No class components, only functional
+- Use clear, descriptive variable names
+- Add code comments explaining:
+  - Purpose of each component
+  - Props and state used
+  - Any functions and event handlers
+  - Styling approach
+- Make sure it runs in both Replit and VSCode
+- Include sample mock data in code where needed
+
+---
+
+### ✅ Example Functionality
+
+- AnalyzeForm: handleSubmit
+- AnalysisResults: displays results from form
+- Report page: downloadReport
+- Navigation between pages
+- Proper use of props
+
+---
+
+### 🪄 Special Note
+
+- On Analyze page, explicitly REMOVE yield estimate and action button shown in the mockup.
+- Document that in the code so it's clear it was intentional.
+
+---
+
+### ✨ Deliverable
+
+- Fully working React app matching the 4 mockups.
+- Fully documented, clean code.
+- Folder structure as defined.
+- Styling included.
+- Functions implemented based on mockup features.
+- Runs on Replit and VSCode.
+
+---
+
+Please generate this entire project exactly as described.
