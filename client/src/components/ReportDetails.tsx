@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import "../styles/ReportDetails.css";
 
 /**
@@ -12,11 +12,13 @@ import "../styles/ReportDetails.css";
  * - Disease distribution visualization
  * - Interactive charts and data displays
  * - Export functionality for charts
+ * - Loading states and empty data handling
  * 
  * Props:
  * - farmData: Array of farm performance data
  * - diseaseData: Array of disease distribution data
  * - onChartExport: Function to handle chart export
+ * - loading: Boolean to show loading state
  */
 interface FarmPerformance {
   name: string;
@@ -40,13 +42,56 @@ interface ReportDetailsProps {
   farmData: FarmPerformance[];
   diseaseData: DiseaseDistribution[];
   onChartExport?: (chartType: string) => void;
+  loading?: boolean;
 }
 
-const ReportDetails = ({ farmData, diseaseData, onChartExport }: ReportDetailsProps) => {
+const ReportDetails = ({ farmData, diseaseData, onChartExport, loading = false }: ReportDetailsProps) => {
   /**
    * Renders farm performance chart with progress bars
    */
   const renderFarmPerformance = () => {
+    if (loading) {
+      return (
+        <div className="chart-container">
+          <div className="chart-header">
+            <h2 className="chart-title">Farm Performance by Location</h2>
+            <button 
+              className="chart-export-btn"
+              disabled={true}
+            >
+              <Download className="btn-icon" />
+            </button>
+          </div>
+          
+          <div className="loading-container">
+            <Loader2 className="loading-spinner" />
+            <p>Loading farm performance data...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (farmData.length === 0) {
+      return (
+        <div className="chart-container">
+          <div className="chart-header">
+            <h2 className="chart-title">Farm Performance by Location</h2>
+            <button 
+              className="chart-export-btn"
+              disabled={true}
+            >
+              <Download className="btn-icon" />
+            </button>
+          </div>
+          
+          <div className="empty-container">
+            <p>No farm performance data available</p>
+            <p className="empty-subtitle">Data will appear here when available</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="chart-container">
         <div className="chart-header">
@@ -82,8 +127,8 @@ const ReportDetails = ({ farmData, diseaseData, onChartExport }: ReportDetailsPr
               
               <div className="farm-metrics">
                 <span className="metric">Crown Cutting: {farm.crownCutting}</span>
-                <span className="metric">Diseased: {farm.diseasedPercentage}%</span>
                 <span className="metric">Suckers: {farm.suckers}</span>
+                <span className="metric">Diseased: {farm.diseasedPercentage}%</span>
               </div>
             </div>
           ))}
@@ -96,6 +141,48 @@ const ReportDetails = ({ farmData, diseaseData, onChartExport }: ReportDetailsPr
    * Renders disease distribution chart
    */
   const renderDiseaseDistribution = () => {
+    if (loading) {
+      return (
+        <div className="chart-container">
+          <div className="chart-header">
+            <h2 className="chart-title">Disease Distribution</h2>
+            <button 
+              className="chart-export-btn"
+              disabled={true}
+            >
+              <Download className="btn-icon" />
+            </button>
+          </div>
+          
+          <div className="loading-container">
+            <Loader2 className="loading-spinner" />
+            <p>Loading disease distribution data...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (diseaseData.length === 0) {
+      return (
+        <div className="chart-container">
+          <div className="chart-header">
+            <h2 className="chart-title">Disease Distribution</h2>
+            <button 
+              className="chart-export-btn"
+              disabled={true}
+            >
+              <Download className="btn-icon" />
+            </button>
+          </div>
+          
+          <div className="empty-container">
+            <p>No disease distribution data available</p>
+            <p className="empty-subtitle">Data will appear here when available</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="chart-container">
         <div className="chart-header">

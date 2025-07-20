@@ -43,7 +43,7 @@ const AboutUsContent = () => {
       iconColor: "text-purple-600",
       bgColor: "bg-purple-100",
       title: "Impact",
-      description: "Empowering farmers in Calbazon, Laguna with cutting-edge technology to make informed decisions about crop management and disease prevention."
+      description: "Empowering farmers in Calauan, Laguna with cutting-edge technology to make informed decisions about crop management and disease prevention."
     }
   ];
 
@@ -52,21 +52,21 @@ const AboutUsContent = () => {
     {
       name: "Robong, Dexter D.",
       role: "Frontend Developer & Model Integration",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300",
+      photo: "/golem.jpg",
       description: "Specializes in React development and AI model integration. Responsible for creating interactive user interfaces and converting machine learning models with TensorFlow.",
       skills: ["React", "TensorFlow", "JavaScript", "Computer Vision"]
     },
     {
       name: "Badillo, Jerahmeel A.",
       role: "Backend Developer & Data Specialist",
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300",
+      photo: "/moks.jpg",
       description: "Expert in server-side development and data processing. Manages database operations, API development, and ensures robust data preprocessing for the system.",
       skills: ["Django", "Python", "MongoDB", "Data Processing"]
     },
     {
       name: "Calapiao, Jan Reimon S.",
       role: "UX/UI Designer & System Tester",
-      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=300&h=300",
+      photo: "/renz.jpg",
       description: "Focuses on user experience design and comprehensive system testing. Ensures the application is user-friendly and performs testing across mobile and desktop platforms.",
       skills: ["Figma", "UX Research", "QA Testing", "Design Systems"]
     }
@@ -76,7 +76,7 @@ const AboutUsContent = () => {
    * Renders skill badges for team members
    */
   const renderSkills = (skills: string[]) => {
-    const skillColors = {
+    const skillColors: { [key: string]: string } = {
       "React": "bg-blue-100 text-blue-700",
       "TensorFlow": "bg-green-100 text-green-700",
       "JavaScript": "bg-purple-100 text-purple-700",
@@ -112,7 +112,7 @@ const AboutUsContent = () => {
         <h1 className="about-title">About PineappleVision</h1>
         <p className="about-description">
           Early Disease Detection in Pineapple Crops Using Computer Vision and Machine Learning to 
-          Determine Seedling Propagation Method: Crown Cutting or Suckers in Various Farms in Calbazon, Laguna
+          Determine Seedling Propagation Method: Crown Cutting or Suckers in Various Farms in Calauan, Laguna
         </p>
       </div>
 

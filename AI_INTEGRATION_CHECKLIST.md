@@ -18,7 +18,7 @@ This checklist ensures your trained pineapple disease detection model integrates
   - [ ] Leaf Spot disease
   - [ ] Root Rot disease
 - [ ] Minimum 1,000 images per class
-- [ ] Images represent Calbazon, Laguna growing conditions
+- [ ] Images represent Calauan, Laguna growing conditions
 - [ ] Balanced dataset across disease severity levels
 
 ### ✅ Model Specifications
@@ -63,7 +63,7 @@ cat > models/pineapple-disease-detector/v1.0.0/metadata.json << EOF
   "testAccuracy": 89.7,
   "framework": "TensorFlow 2.x",
   "baseModel": "ResNet50",
-  "notes": "Initial production model for Calbazon farms"
+  "notes": "Initial production model for Calauan farms"
 }
 EOF
 ```
@@ -160,7 +160,7 @@ app.post("/api/analyze/images", upload.array('images'), async (req, res) => {
     for (const file of files) {
       const request = {
         imageBuffer: file.buffer,
-        farmLocation: req.body.farmLocation || 'Calbazon, Laguna',
+        farmLocation: req.body.farmLocation || 'Calauan, Laguna',
         propagationMethod: req.body.propagationMethod || 'Unknown',
         timestamp: new Date().toISOString()
       };
@@ -205,7 +205,7 @@ curl http://localhost:5000/api/models/status
 # 3. Test with sample image
 curl -X POST \
   -F "images=@/path/to/test_image.jpg" \
-  -F "farmLocation=Test Farm, Calbazon" \
+  -F "farmLocation=Test Farm, Calauan" \
   http://localhost:5000/api/analyze/images
 ```
 

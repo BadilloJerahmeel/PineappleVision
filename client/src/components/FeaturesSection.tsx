@@ -2,19 +2,22 @@ import { Camera, CheckCircle, AlertTriangle, Star } from "lucide-react";
 import "../styles/FeaturesSection.css";
 
 /**
- * FeaturesSection Component - Statistics Cards
+ * FeaturesSection Component - Real-time Statistics Cards
  * 
- * This component displays key statistics and metrics for the dashboard.
- * It shows total scans, healthy plants percentage, disease alerts, and success rate.
+ * This component displays real-time statistics and metrics for the dashboard
+ * received via WebSocket connection. It shows total scans, healthy plants 
+ * percentage, disease alerts, and success rate with live updates.
  * 
  * Features:
- * - Four main statistics cards
+ * - Four main statistics cards with real-time data
  * - Color-coded icons for different metrics
- * - Percentage changes and trend indicators
+ * - Live updates from WebSocket connection
  * - Responsive grid layout
+ * - Loading states for data updates
  * 
  * Props:
- * - stats: Object containing the statistics to display
+ * - stats: Object containing real-time statistics from WebSocket
+ * - isLoading: Optional loading state indicator
  */
 interface StatCard {
   icon: React.ElementType;
@@ -32,10 +35,11 @@ interface FeaturesProps {
     diseaseAlerts: number;
     successRate: number;
   };
+  isLoading?: boolean;
 }
 
-const FeaturesSection = ({ stats }: FeaturesProps) => {
-  // Statistics cards configuration
+const FeaturesSection = ({ stats, isLoading = false }: FeaturesProps) => {
+  // Statistics cards configuration with real-time data
   const statCards: StatCard[] = [
     {
       icon: Camera,
@@ -73,12 +77,20 @@ const FeaturesSection = ({ stats }: FeaturesProps) => {
 
   return (
     <div className="features-section">
+      {/* Loading indicator for real-time updates */}
+      {isLoading && (
+        <div className="loading-indicator">
+          <div className="loading-spinner"></div>
+          <span>Updating statistics...</span>
+        </div>
+      )}
+      
       <div className="stats-grid">
         {statCards.map((card, index) => {
           const Icon = card.icon;
           
           return (
-            <div key={index} className="stat-card">
+            <div key={index} className={`stat-card ${isLoading ? 'loading' : ''}`}>
               <div className="stat-content">
                 <div className="stat-header">
                   <div className={`stat-icon-wrapper ${card.iconColor.replace('text-', 'bg-').replace('-600', '-100')}`}>

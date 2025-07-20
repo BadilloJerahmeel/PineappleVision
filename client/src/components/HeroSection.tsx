@@ -53,7 +53,7 @@ const HeroSection = ({ onRefresh }: HeroSectionProps) => {
         <div className="hero-text">
           <h1 className="hero-title">PineappleVision Dashboard</h1>
           <p className="hero-description">
-            Early disease detection using computer vision and machine learning for pineapple crops in Calbazon, Laguna
+            Early disease detection using computer vision and machine learning for pineapple crops in Calauan, Laguna
           </p>
         </div>
         <div className="hero-actions">

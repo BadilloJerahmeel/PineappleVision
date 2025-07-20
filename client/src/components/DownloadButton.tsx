@@ -65,7 +65,7 @@ const DownloadButton = ({ onPdfDownload, onCsvExport, isLoading }: DownloadButto
         {
           id: "ANA001",
           dateTime: "2024-01-15 10:30:00",
-          farmLocation: "Sector A - Calbazon",
+          farmLocation: "Sector A - Calauan",
           propagationMethod: "Crown Cutting",
           diseaseStatus: "Healthy",
           confidence: "95%",
@@ -75,7 +75,7 @@ const DownloadButton = ({ onPdfDownload, onCsvExport, isLoading }: DownloadButto
         {
           id: "ANA002", 
           dateTime: "2024-01-15 11:45:00",
-          farmLocation: "Sector B - Calbazon",
+          farmLocation: "Sector B - Calauan",
           propagationMethod: "Suckers",
           diseaseStatus: "Disease Detected",
           confidence: "87%",
@@ -85,7 +85,7 @@ const DownloadButton = ({ onPdfDownload, onCsvExport, isLoading }: DownloadButto
         {
           id: "ANA003",
           dateTime: "2024-01-15 14:20:00", 
-          farmLocation: "Sector C - Calbazon",
+          farmLocation: "Sector C - Calauan",
           propagationMethod: "Crown Cutting",
           diseaseStatus: "Healthy",
           confidence: "92%",

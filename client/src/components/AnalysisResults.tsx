@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { Filter, Download } from "lucide-react";
 import "../styles/AnalysisResults.css";
 
@@ -10,10 +11,10 @@ import "../styles/AnalysisResults.css";
  * 
  * Features:
  * - Data table with analysis results
- * - Filter controls for status, farm, and method
+ * - Functional filter controls for status, farm, method, and date
  * - Progress bars for confidence levels
  * - Status badges for disease detection
- * - Export functionality
+ * - CSV export functionality
  * 
  * Props:
  * - analyses: Array of analysis data to display
@@ -41,6 +42,76 @@ interface AnalysisResultsProps {
 }
 
 const AnalysisResults = ({ analyses, onFilter, onExport }: AnalysisResultsProps) => {
+  // Filter state
+  const [filters, setFilters] = useState({
+    status: "All Results",
+    farm: "All Farms",
+    method: "All Methods",
+    date: "All Dates"
+  });
+
+  // Get unique values for filter options
+  const uniqueFarms = useMemo(() => ["All Farms", ...Array.from(new Set(analyses.map(a => a.farmLocation)))], [analyses]);
+  const uniqueMethods = useMemo(() => ["All Methods", ...Array.from(new Set(analyses.map(a => a.propagationMethod)))], [analyses]);
+  const uniqueDates = useMemo(() => ["All Dates", ...Array.from(new Set(analyses.map(a => a.dateTime.slice(0, 10))))], [analyses]);
+
+  /**
+   * Handles filter changes and updates parent component
+   */
+  const handleFilterChange = (filterType: string, value: string) => {
+    const newFilters = { ...filters, [filterType]: value };
+    setFilters(newFilters);
+    if (onFilter) {
+      onFilter(newFilters);
+    }
+  };
+
+  /**
+   * Handles CSV export functionality
+   */
+  const handleExportCSV = () => {
+    if (onExport) {
+      onExport();
+    } else {
+      // Fallback CSV export implementation
+      const csvContent = generateCSV(analyses);
+      downloadCSV(csvContent, 'analysis_results.csv');
+    }
+  };
+
+  /**
+   * Generates CSV content from analysis data
+   */
+  const generateCSV = (data: Analysis[]) => {
+    const headers = ['Date', 'Time', 'Farm Location', 'Propagation Method', 'Disease Status', 'Confidence', 'Severity'];
+    const rows = data.map(analysis => [
+      new Date(analysis.dateTime).toLocaleDateString(),
+      new Date(analysis.dateTime).toLocaleTimeString(),
+      analysis.farmLocation,
+      analysis.propagationMethod,
+      analysis.diseaseStatus,
+      `${analysis.confidence}%`,
+      analysis.severity
+    ]);
+    
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  };
+
+  /**
+   * Downloads CSV file
+   */
+  const downloadCSV = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   /**
    * Renders status badge with appropriate color coding
    */
@@ -107,15 +178,11 @@ const AnalysisResults = ({ analyses, onFilter, onExport }: AnalysisResultsProps)
         <div className="header-content">
           <h1 className="results-title">Analysis History & Insights</h1>
           <p className="results-description">
-            Review and analyze disease detection results across farms in Calbazon, Laguna
+            Review and analyze disease detection results across farms in Calauan, Laguna
           </p>
         </div>
         <div className="header-actions">
-          <button className="filter-button" onClick={() => onFilter && onFilter({})}>
-            <Filter className="button-icon" />
-            Filter by Date
-          </button>
-          <button className="export-button" onClick={onExport}>
+          <button className="export-button" onClick={handleExportCSV}>
             <Download className="button-icon" />
             Export CSV
           </button>
@@ -127,28 +194,64 @@ const AnalysisResults = ({ analyses, onFilter, onExport }: AnalysisResultsProps)
         <div className="filter-controls">
           <div className="filter-group">
             <span className="filter-label">Status:</span>
-            <button className="filter-button-active">All Results</button>
-            <button className="filter-button-inactive">Healthy</button>
-            <button className="filter-button-inactive">Diseased</button>
+            <button 
+              className={filters.status === "All Results" ? "filter-button-active" : "filter-button-inactive"}
+              onClick={() => handleFilterChange("status", "All Results")}
+            >
+              All Results
+            </button>
+            <button 
+              className={filters.status === "Healthy" ? "filter-button-active" : "filter-button-inactive"}
+              onClick={() => handleFilterChange("status", "Healthy")}
+            >
+              Healthy
+            </button>
+            <button 
+              className={filters.status === "Diseased" ? "filter-button-active" : "filter-button-inactive"}
+              onClick={() => handleFilterChange("status", "Diseased")}
+            >
+              Diseased
+            </button>
           </div>
           
           <div className="filter-group">
             <span className="filter-label">Farm:</span>
-            <select className="filter-select">
-              <option>All Farms</option>
-              <option>Farm A</option>
-              <option>Farm B</option>
-              <option>Farm C</option>
-              <option>Farm D</option>
+            <select 
+              className="filter-select"
+              value={filters.farm}
+              onChange={(e) => handleFilterChange("farm", e.target.value)}
+            >
+              {uniqueFarms.map(farm => (
+                <option key={farm} value={farm}>{farm}</option>
+              ))}
             </select>
           </div>
           
           <div className="filter-group">
             <span className="filter-label">Method:</span>
-            <select className="filter-select">
-              <option>All Methods</option>
-              <option>Crown Cutting</option>
-              <option>Suckers</option>
+            <select 
+              className="filter-select"
+              value={filters.method}
+              onChange={(e) => handleFilterChange("method", e.target.value)}
+            >
+              {uniqueMethods.map(method => (
+                <option key={method} value={method}>{method}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <span className="filter-label">Date:</span>
+            <select 
+              className="filter-select"
+              value={filters.date}
+              onChange={(e) => handleFilterChange("date", e.target.value)}
+            >
+              {uniqueDates.map(date => (
+                <option key={date} value={date}>
+                  {date === "All Dates" ? "All Dates" : new Date(date).toLocaleDateString()}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -174,28 +277,36 @@ const AnalysisResults = ({ analyses, onFilter, onExport }: AnalysisResultsProps)
               </tr>
             </thead>
             <tbody>
-              {analyses.map((analysis) => (
-                <tr key={analysis.id}>
-                  <td className="date-cell">
-                    {new Date(analysis.dateTime).toLocaleDateString()}
-                    <br />
-                    <span className="time-text">
-                      {new Date(analysis.dateTime).toLocaleTimeString()}
-                    </span>
-                  </td>
-                  <td>{analysis.farmLocation}</td>
-                  <td>{analysis.propagationMethod}</td>
-                  <td>
-                    {renderStatusBadge(analysis.diseaseStatus, analysis.isHealthy)}
-                  </td>
-                  <td>
-                    {renderConfidenceBar(analysis.confidence)}
-                  </td>
-                  <td>
-                    {renderSeverityBadge(analysis.severity)}
+              {analyses.length > 0 ? (
+                analyses.map((analysis) => (
+                  <tr key={analysis.id}>
+                    <td className="date-cell">
+                      {new Date(analysis.dateTime).toLocaleDateString()}
+                      <br />
+                      <span className="time-text">
+                        {new Date(analysis.dateTime).toLocaleTimeString()}
+                      </span>
+                    </td>
+                    <td>{analysis.farmLocation}</td>
+                    <td>{analysis.propagationMethod}</td>
+                    <td>
+                      {renderStatusBadge(analysis.diseaseStatus, analysis.isHealthy)}
+                    </td>
+                    <td>
+                      {renderConfidenceBar(analysis.confidence)}
+                    </td>
+                    <td>
+                      {renderSeverityBadge(analysis.severity)}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="no-data-message">
+                    No analysis results available
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-PineappleVision is a comprehensive web application designed to revolutionize pineapple farming through AI-powered disease detection and propagation method analysis. The system helps farmers in Calbazon, Laguna make informed decisions about crop management and disease prevention by providing instant, accurate analysis of pineapple plant health.
+PineappleVision is a comprehensive web application designed to revolutionize pineapple farming through AI-powered disease detection and propagation method analysis. The system helps farmers in Calauan, Laguna make informed decisions about crop management and disease prevention by providing instant, accurate analysis of pineapple plant health.
 
 ## User Preferences
 

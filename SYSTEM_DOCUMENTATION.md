@@ -19,7 +19,7 @@
 
 ## System Overview
 
-**PineappleVision** is a comprehensive web application designed for AI-powered pineapple disease detection and farm management. The system serves farmers in Calbazon, Laguna with real-time analysis, comprehensive reporting, and data-driven insights for crop health management.
+**PineappleVision** is a comprehensive web application designed for AI-powered pineapple disease detection and farm management. The system serves farmers in Calauan, Laguna with real-time analysis, comprehensive reporting, and data-driven insights for crop health management.
 
 ### Core Features
 - **Disease Detection**: AI-powered image analysis for early disease identification
@@ -217,7 +217,7 @@ interface IStorage {
 **Current Implementation**:
 - In-memory storage with sample data
 - Ready for PostgreSQL integration
-- Sample farm data for Calbazon, Laguna
+- Sample farm data for Calauan, Laguna
 - Mock analysis results for development
 
 #### Route Handlers (`server/routes.ts`)

@@ -281,7 +281,7 @@ export class ModelManager {
     } catch (error) {
       return {
         status: 'unhealthy',
-        details: { error: error.message }
+        details: { error: error instanceof Error ? error.message : 'Unknown error' }
       };
     }
   }

@@ -154,3 +154,7 @@
 .confidence-text {
   @apply text-sm text-gray-600;
 }
+
+.no-data-message {
+  @apply text-center py-8 text-gray-500 text-sm;
+}

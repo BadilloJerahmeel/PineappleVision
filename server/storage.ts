@@ -46,10 +46,10 @@ export class MemStorage implements IStorage {
   private initializeSampleData() {
     // Sample farms
     const sampleFarms = [
-      { name: "Farm A", location: "Calbazon North", sector: "North Sector" },
-      { name: "Farm B", location: "Calbazon Central", sector: "Central Sector" },
-      { name: "Farm C", location: "Calbazon South", sector: "South Sector" },
-      { name: "Farm D", location: "Calbazon East", sector: "East Sector" }
+          { name: "Farm A", location: "Calauan North", sector: "North Sector" },
+    { name: "Farm B", location: "Calauan Central", sector: "Central Sector" },
+    { name: "Farm C", location: "Calauan South", sector: "South Sector" },
+    { name: "Farm D", location: "Calauan East", sector: "East Sector" }
     ];
 
     sampleFarms.forEach(farm => {

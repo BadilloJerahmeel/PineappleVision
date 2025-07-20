@@ -1,22 +1,25 @@
-import { Calendar, MapPin, TrendingUp, Shield } from "lucide-react";
+import { Calendar, MapPin, TrendingUp, Shield, Loader2, AlertCircle } from "lucide-react";
 import "../styles/ReportSummary.css";
 
 /**
  * ReportSummary Component - Report Statistics Overview
  * 
  * This component displays high-level statistics and summary information for the reports page.
- * It provides key metrics about farm analysis and disease detection results.
+ * It provides key metrics about farm analysis and disease detection results with real-time updates.
  * 
  * Features:
- * - Summary statistics cards
+ * - Summary statistics cards with loading states
  * - Time period and farm filtering
  * - Key performance indicators
  * - Visual indicators for metrics
+ * - Error handling and display
  * 
  * Props:
  * - summaryData: Object containing report summary statistics
  * - onPeriodChange: Function to handle time period changes
  * - onFarmFilter: Function to handle farm filtering
+ * - loading: Boolean to show loading state
+ * - error: String containing error message
  */
 interface ReportSummaryProps {
   summaryData: {
@@ -27,24 +30,26 @@ interface ReportSummaryProps {
   };
   onPeriodChange?: (period: string) => void;
   onFarmFilter?: (farm: string) => void;
+  loading?: boolean;
+  error?: string | null;
 }
 
-const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSummaryProps) => {
+const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter, loading = false, error }: ReportSummaryProps) => {
   // Summary cards configuration
   const summaryCards = [
     {
       icon: MapPin,
       iconColor: "text-blue-600",
       title: "Total Farms",
-      value: summaryData.totalFarms.toString(),
-      subtitle: "Calbazon, Laguna",
+      value: loading ? "..." : summaryData.totalFarms.toString(),
+      subtitle: "Calauan, Laguna",
       bgColor: "bg-blue-100"
     },
     {
       icon: TrendingUp,
       iconColor: "text-green-600",
       title: "Farms Analyzed",
-      value: summaryData.farmsAnalyzed.toString(),
+      value: loading ? "..." : summaryData.farmsAnalyzed.toString(),
       subtitle: "Across all farms",
       bgColor: "bg-green-100"
     },
@@ -52,7 +57,7 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
       icon: Calendar,
       iconColor: "text-yellow-600",
       title: "Overall Health Rate",
-      value: `${summaryData.overallHealthRate}%`,
+      value: loading ? "..." : `${summaryData.overallHealthRate}%`,
       subtitle: "+1% from last month",
       bgColor: "bg-yellow-100"
     },
@@ -60,7 +65,7 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
       icon: Shield,
       iconColor: "text-red-600",
       title: "Success Cases",
-      value: summaryData.successCases.toString(),
+      value: loading ? "..." : summaryData.successCases.toString(),
       subtitle: "6% from last month",
       bgColor: "bg-red-100"
     }
@@ -73,7 +78,7 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
         <div className="header-content">
           <h1 className="summary-title">Reports & Analytics</h1>
           <p className="summary-description">
-            Comprehensive analysis of disease detection and propagation methods across farms in Calbazon, Laguna
+            Comprehensive analysis of disease detection and propagation methods across farms in Calauan, Laguna
           </p>
         </div>
         
@@ -81,6 +86,7 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
           <select 
             className="control-select"
             onChange={(e) => onPeriodChange && onPeriodChange(e.target.value)}
+            disabled={loading}
           >
             <option value="6months">Last 6 Months</option>
             <option value="3months">Last 3 Months</option>
@@ -90,6 +96,7 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
           <select 
             className="control-select"
             onChange={(e) => onFarmFilter && onFarmFilter(e.target.value)}
+            disabled={loading}
           >
             <option value="all">All Farms</option>
             <option value="farm-a">Farm A</option>
@@ -100,16 +107,28 @@ const ReportSummary = ({ summaryData, onPeriodChange, onFarmFilter }: ReportSumm
         </div>
       </div>
 
+      {/* Error Display */}
+      {error && (
+        <div className="error-message">
+          <AlertCircle className="error-icon" />
+          <span>{error}</span>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="summary-cards">
         {summaryCards.map((card, index) => {
           const Icon = card.icon;
           
           return (
-            <div key={index} className="summary-card">
+            <div key={index} className={`summary-card ${loading ? 'loading' : ''}`}>
               <div className="card-content">
                 <div className={`card-icon ${card.bgColor}`}>
-                  <Icon className={`icon ${card.iconColor}`} />
+                  {loading ? (
+                    <Loader2 className="icon loading-spinner" />
+                  ) : (
+                    <Icon className={`icon ${card.iconColor}`} />
+                  )}
                 </div>
                 <div className="card-info">
                   <div className="card-value">{card.value}</div>

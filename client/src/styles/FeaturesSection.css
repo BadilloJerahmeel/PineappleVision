@@ -3,12 +3,29 @@
   @apply p-8;
 }
 
+/* Loading Indicator */
+.loading-indicator {
+  @apply flex items-center justify-center space-x-2 mb-4 p-3 bg-blue-50 rounded-lg;
+}
+
+.loading-spinner {
+  @apply w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin;
+}
+
+.loading-indicator span {
+  @apply text-sm text-blue-700 font-medium;
+}
+
 .stats-grid {
   @apply grid grid-cols-1 md:grid-cols-4 gap-6;
 }
 
 .stat-card {
-  @apply bg-white rounded-lg p-6 shadow-lg;
+  @apply bg-white rounded-lg p-6 shadow-lg transition-opacity duration-200;
+}
+
+.stat-card.loading {
+  @apply opacity-75;
 }
 
 .stat-content {

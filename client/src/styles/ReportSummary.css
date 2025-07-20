@@ -27,12 +27,29 @@
   @apply px-4 py-2 border border-gray-300 rounded-lg text-sm;
 }
 
+.control-select:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Error Message Styles */
+.error-message {
+  @apply flex items-center space-x-2 p-4 mb-6 bg-red-50 border border-red-200 rounded-lg text-red-700;
+}
+
+.error-icon {
+  @apply w-5 h-5 text-red-600;
+}
+
 .summary-cards {
   @apply grid grid-cols-1 md:grid-cols-4 gap-6;
 }
 
 .summary-card {
   @apply bg-white rounded-lg p-6 shadow-lg;
+}
+
+.summary-card.loading {
+  @apply opacity-75;
 }
 
 .card-content {
@@ -45,6 +62,10 @@
 
 .icon {
   @apply w-5 h-5;
+}
+
+.loading-spinner {
+  @apply animate-spin;
 }
 
 .card-info {

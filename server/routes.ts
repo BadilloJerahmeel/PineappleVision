@@ -5,6 +5,7 @@ import { insertAnalysisSchema, insertFarmSchema } from "@shared/schema";
 import { z } from "zod";
 import { modelManager } from "./model-manager";
 import { aiService } from "./ai-service";
+import { websocketService } from "./websocket-service";
 
 // Note: Multer would be added here for file uploads when AI model is ready
 // import multer from 'multer';
@@ -76,7 +77,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get dashboard statistics
   app.get("/api/dashboard/stats", async (req, res) => {
     try {
-      const stats = await storage.getDashboardStats();
+      // Starting with zeros until real analysis data is available
+      const stats = {
+        totalScans: 0,
+        healthyPlants: 0,
+        diseaseAlerts: 0,
+        successRate: 0
+      };
       res.json(stats);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch dashboard statistics" });
@@ -90,6 +97,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(reportData);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch report data" });
+    }
+  });
+
+  // Analysis endpoint for HTTP fallback (when WebSocket unavailable)
+  app.post("/api/analyze", async (req, res) => {
+    try {
+      // TODO: Add multer middleware for file uploads when AI model is ready
+      // For now, simulate analysis results
+      
+      const { propagationMethod } = req.body;
+      
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const analysisResults = [
+        {
+          id: `analysis_${Date.now()}`,
+          fileName: 'uploaded_image.jpg',
+          propagationMethod: propagationMethod || 'Crown Cutting',
+          diseaseStatus: Math.random() > 0.7 ? 'Disease Detected' : 'Healthy',
+          confidence: Math.floor(Math.random() * 30) + 70,
+          severity: Math.random() > 0.5 ? 'Mild' : 'Moderate',
+          timestamp: new Date().toISOString()
+        }
+      ];
+
+      res.json({ 
+        success: true, 
+        results: analysisResults,
+        message: "Analysis completed successfully"
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      res.status(500).json({ error: "Analysis failed", details: errorMessage });
     }
   });
 
@@ -109,7 +150,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         {
           id: `analysis_${Date.now()}`,
           fileName: 'uploaded_image.jpg',
-          farmLocation: 'Calbazon, Laguna',
+          farmLocation: 'Calauan, Laguna',
           propagationMethod: Math.random() > 0.5 ? 'Crown Cutting' : 'Suckers',
           diseaseStatus: Math.random() > 0.7 ? 'Disease Detected' : 'Healthy',
           confidence: Math.floor(Math.random() * 30) + 70,
@@ -197,5 +238,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   modelManager.autoLoadBestModel().catch(console.error);
 
   const httpServer = createServer(app);
+  
+  // Initialize WebSocket service
+  websocketService.initialize(httpServer);
+  
   return httpServer;
 }
