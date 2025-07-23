@@ -6,9 +6,7 @@ import { z } from "zod";
 import { modelManager } from "./model-manager";
 import { aiService } from "./ai-service";
 import { websocketService } from "./websocket-service";
-
-// Note: Multer would be added here for file uploads when AI model is ready
-// import multer from 'multer';
+import multer from 'multer';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for PineappleVision application
@@ -244,3 +242,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   return httpServer;
 }
+
+  // Replace the simulated /api/analyze route with the real implementation

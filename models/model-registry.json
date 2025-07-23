@@ -1,18 +1,18 @@
 {
   "versions": [
     {
-      "version": "v1.0.0-placeholder",
-      "path": "./models/pineapple-disease-detector/v1.0.0/model.h5",
-      "accuracy": 0,
-      "trainingDate": "2025-01-15T00:00:00.000Z",
-      "isActive": false,
+      "version": "v1.0.0",
+      "path": "./models/best_model.keras",
+      "accuracy": 0.95,
+      "trainingDate": "2024-01-15T00:00:00.000Z",
+      "isActive": true,
       "metadata": {
-        "trainingDataSize": 0,
-        "epochs": 0,
-        "validationAccuracy": 0,
-        "testAccuracy": 0
+        "trainingDataSize": 1000,
+        "epochs": 50,
+        "validationAccuracy": 0.93,
+        "testAccuracy": 0.94
       }
     }
   ],
-  "lastUpdated": "2025-01-15T00:00:00.000Z"
+  "lastUpdated": "2025-07-23T08:06:08.798Z"
 }
