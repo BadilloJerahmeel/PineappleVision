@@ -237,8 +237,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   
-  // Initialize WebSocket service
-  websocketService.initialize(httpServer);
+  // Add CORS headers for WebSocket
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+  
+  // Initialize WebSocket service with a specific path
+  websocketService.initialize(httpServer, '/ws-app');
   
   return httpServer;
 }

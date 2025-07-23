@@ -18,9 +18,28 @@ import { modelManager } from './model-manager';
  * - Fallback to HTTP endpoints when WebSocket unavailable
  */
 
+interface AnalysisRequestData {
+  files: Array<{
+    buffer: Buffer | number[];
+    name?: string;
+  }>;
+  propagationMethod?: string;
+  metadata?: {
+    farmId?: string | number;
+    farmLocation?: string;
+    date?: string;
+    time?: string;
+  };
+  timestamp?: string;
+}
+
 interface WebSocketMessage {
   type: 'dashboard_update' | 'propagation_update' | 'analysis_result' | 'refresh_request' | 'analysis_request' | 'test_message' | 'test_response' | 'error';
   data: any;
+  files?: Array<any>; // Add this to support the current message structure
+  propagationMethod?: string;
+  metadata?: any;
+  timestamp?: string;
 }
 
 interface DashboardStats {
@@ -55,8 +74,12 @@ class WebSocketService {
    * Initializes the WebSocket server
    * Sets up connection handling and message processing
    */
-  initialize(server: Server) {
-    this.wss = new WebSocketServer({ server, path: '/ws' });
+  initialize(server: Server, path: string = '/ws-app') {
+    this.wss = new WebSocketServer({ 
+      server,
+      path,
+      perMessageDeflate: false
+    });
     
     this.wss.on('connection', (ws: WebSocket) => {
       console.log('WebSocket client connected');
@@ -65,13 +88,63 @@ class WebSocketService {
       // Send initial data to new client
       this.sendInitialData(ws);
       
-      ws.on('message', (data: Buffer) => {
+      ws.on('error', (error) => {
+        console.error('WebSocket connection error:', error);
+        this.sendError(ws, 'Connection error occurred');
+        this.clients.delete(ws);
+      });
+      
+      ws.on('message', async (data: Buffer) => {
         try {
-          const message: WebSocketMessage = JSON.parse(data.toString());
-          this.handleMessage(ws, message);
+          const rawMessage = data.toString();
+          console.log('Received data:', rawMessage);
+          
+          const message = JSON.parse(rawMessage);
+          
+          // Validate basic message structure
+          if (!message || typeof message !== 'object') {
+            throw new Error('Message must be a valid JSON object');
+          }
+          
+          if (!message.type || typeof message.type !== 'string') {
+            throw new Error('Message must contain a valid type field');
+          }
+
+          // For analysis requests, restructure the data to match expected format
+          if (message.type === 'analysis_request') {
+            const analysisData: AnalysisRequestData = {
+              files: message.files || [],
+              propagationMethod: message.propagationMethod || message.metadata?.propagationMethod,
+              metadata: message.metadata,
+              timestamp: message.timestamp
+            };
+
+            // Validate files array
+            if (!Array.isArray(analysisData.files)) {
+              throw new Error('Files must be an array');
+            }
+
+            // Process each file in the array
+            if (analysisData.files.length === 0) {
+              throw new Error('No files provided for analysis');
+            }
+
+            // Create a properly structured message
+            const structuredMessage: WebSocketMessage = {
+              type: 'analysis_request',
+              data: analysisData
+            };
+
+            await this.handleMessage(ws, structuredMessage);
+            return;
+          }
+
+          // Handle other message types
+          await this.handleMessage(ws, message as WebSocketMessage);
+          
         } catch (error) {
           console.error('Error parsing WebSocket message:', error);
-          this.sendError(ws, 'Invalid message format');
+          this.sendError(ws, error instanceof Error ? error.message : 'Invalid message format');
         }
       });
       
@@ -167,49 +240,107 @@ class WebSocketService {
   /**
    * Handles analysis requests from clients
    */
-  // Replace the simulateAnalysis method with real analysis
-  private async handleAnalysisRequest(ws: WebSocket, data: any) {
+  private async handleAnalysisRequest(ws: WebSocket, data: AnalysisRequestData) {
     try {
-      if (!data.imageBuffer) {
-        throw new Error("No image data provided");
+      // Validate request data
+      if (!data || !Array.isArray(data.files) || data.files.length === 0) {
+        throw new Error('Invalid analysis request: No files provided');
       }
-  
+
+      console.log('Received analysis request with', data.files.length, 'files');
+
+      // Get active model
       const activeModel = modelManager.getActiveModel();
       if (!activeModel) {
-        throw new Error("AI model not available");
+        throw new Error('AI model not available');
       }
-  
-      const result = await activeModel.detectDisease({
-        imageBuffer: Buffer.from(data.imageBuffer),
-        farmLocation: data.farmLocation || 'Unknown',
-        propagationMethod: data.propagationMethod || 'Unknown',
-        timestamp: new Date().toISOString()
-      });
-  
-      // Store the analysis result with correct field mappings
-      const analysisResult = {
-        farmId: data.farmId || 0,
-        propagationMethod: data.propagationMethod || 'Unknown',
-        diseaseStatus: result.diseaseClass || 'Unknown',
-        confidence: result.confidence || 0,
-        severity: result.severity || 'Unknown',
-        dateTime: new Date()
-      };
 
-      await storage.createAnalysis({
-        ...analysisResult,
-        isHealthy: analysisResult.diseaseStatus.toLowerCase() === 'healthy'
-      });
-  
-      // Broadcast results to all clients
-      this.broadcast({
-        type: 'analysis_result',
-        data: result
-      });
-  
+      // Process each file
+      for (const file of data.files) {
+        try {
+          // Validate file data
+          if (!file || !file.buffer) {
+            throw new Error(`Invalid file data: Buffer is required for file ${file.name || 'unnamed'}`);
+          }
+
+          console.log('Processing file:', file.name || 'unnamed');
+
+          // Convert ArrayBuffer to Buffer if needed
+          let imageBuffer: Buffer;
+          if (file.buffer instanceof ArrayBuffer) {
+            imageBuffer = Buffer.from(file.buffer);
+          } else if (Array.isArray(file.buffer)) {
+            imageBuffer = Buffer.from(file.buffer);
+          } else if (Buffer.isBuffer(file.buffer)) {
+            imageBuffer = file.buffer;
+          } else {
+            throw new Error(`Invalid buffer type for file ${file.name || 'unnamed'}`);
+          }
+
+          // Prepare analysis request
+          const analysisRequest = {
+            imageBuffer,
+            farmLocation: data.metadata?.farmLocation || 'Unknown',
+            propagationMethod: data.propagationMethod || 'Unknown',
+            timestamp: data.timestamp || new Date().toISOString()
+          };
+
+          // Run disease detection
+          console.log('Running disease detection...');
+          const result = await activeModel.detectDisease(analysisRequest);
+
+          // Prepare analysis result
+          const analysisResult = {
+            id: `analysis_${Date.now()}_${file.name}`,
+            fileName: file.name || 'unnamed',
+            propagationMethod: data.propagationMethod || 'Unknown',
+            diseaseStatus: result.diseaseClass,
+            confidence: result.confidence,
+            severity: result.severity,
+            timestamp: data.timestamp || new Date().toISOString()
+          };
+
+          // Store result
+          await storage.createAnalysis({
+            dateTime: new Date(analysisResult.timestamp),
+            propagationMethod: analysisResult.propagationMethod,
+            diseaseStatus: analysisResult.diseaseStatus,
+            confidence: analysisResult.confidence,
+            severity: analysisResult.severity,
+            farmId: data.metadata?.farmId ? Number(data.metadata.farmId) : 0,
+            isHealthy: result.diseaseClass.toLowerCase() === 'healthy'
+          });
+
+          // Send result back to client
+          this.sendMessage(ws, {
+            type: 'analysis_result',
+            data: analysisResult
+          });
+
+          console.log('Analysis complete:', analysisResult.diseaseStatus);
+        } catch (error) {
+          // Send error for this specific file but continue processing others
+          console.error(`Error processing file ${file.name || 'unnamed'}:`, error);
+          this.sendMessage(ws, {
+            type: 'error',
+            data: {
+              fileName: file.name || 'unnamed',
+              error: error instanceof Error ? error.message : 'Analysis failed'
+            }
+          });
+        }
+      }
+
     } catch (error) {
-      console.error('Error handling analysis request:', error);
-      this.sendError(ws, error instanceof Error ? error.message : 'Analysis request failed');
+      console.error('Error in analysis request:', error);
+      
+      // Send error back to client
+      this.sendMessage(ws, {
+        type: 'error',
+        data: {
+          error: error instanceof Error ? error.message : 'Analysis failed'
+        }
+      });
     }
   }
 
@@ -217,6 +348,7 @@ class WebSocketService {
    * Simulates analysis processing for demonstration
    * In production, this would call the actual AI model
    */
+  // Delete the entire simulateAnalysis method as it's no longer needed
   private async simulateAnalysis(data: any): Promise<AnalysisResult[]> {
     const { files, propagationMethod } = data;
     

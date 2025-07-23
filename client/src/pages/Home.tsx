@@ -113,8 +113,8 @@ const Home = () => {
 
   // WebSocket URL - easily configurable for different environments
   const WS_URL = process.env.NODE_ENV === 'production' 
-    ? 'wss://your-backend-url.com/ws' 
-    : 'ws://localhost:5000/ws';
+    ? 'wss://your-backend-url.com/ws-app' 
+    : 'ws://localhost:5000/ws-app';
 
   /**
    * Establishes WebSocket connection with automatic reconnection
@@ -210,9 +210,19 @@ const Home = () => {
    * Handles both single and batch upload scenarios with metadata
    */
   const sendAnalysisRequest = async (files: File[], selectedMethod: string, metadata: AnalysisMetadata) => {
+    // Convert files to buffers first
+    const fileBuffers = await Promise.all(files.map(async (file) => {
+      const arrayBuffer = await file.arrayBuffer();
+      return {
+        name: file.name,
+        buffer: Array.from(new Uint8Array(arrayBuffer)), // Convert to regular array for JSON serialization
+        type: file.type
+      };
+    }));
+
     const analysisData = {
       type: 'analysis_request',
-      files: files,
+      files: fileBuffers,
       propagationMethod: selectedMethod,
       metadata: metadata,
       timestamp: new Date().toISOString()
@@ -229,7 +239,7 @@ const Home = () => {
       }
     }
 
-    // Fallback to HTTP POST
+    // Fallback to HTTP POST remains unchanged
     try {
       const formData = new FormData();
       files.forEach((file, index) => {
