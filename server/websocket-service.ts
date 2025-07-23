@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { Server } from 'http';
 import { storage } from './storage';
+import { modelManager } from './model-manager';
 
 /**
  * WebSocket Service for Real-time Dashboard Updates
@@ -166,22 +167,49 @@ class WebSocketService {
   /**
    * Handles analysis requests from clients
    */
+  // Replace the simulateAnalysis method with real analysis
   private async handleAnalysisRequest(ws: WebSocket, data: any) {
     try {
-      console.log('Received analysis request:', data);
-      
-      // Simulate analysis processing
-      const results = await this.simulateAnalysis(data);
-      
+      if (!data.imageBuffer) {
+        throw new Error("No image data provided");
+      }
+  
+      const activeModel = modelManager.getActiveModel();
+      if (!activeModel) {
+        throw new Error("AI model not available");
+      }
+  
+      const result = await activeModel.detectDisease({
+        imageBuffer: Buffer.from(data.imageBuffer),
+        farmLocation: data.farmLocation || 'Unknown',
+        propagationMethod: data.propagationMethod || 'Unknown',
+        timestamp: new Date().toISOString()
+      });
+  
+      // Store the analysis result with correct field mappings
+      const analysisResult = {
+        farmId: data.farmId || 0,
+        propagationMethod: data.propagationMethod || 'Unknown',
+        diseaseStatus: result.diseaseClass || 'Unknown',
+        confidence: result.confidence || 0,
+        severity: result.severity || 'Unknown',
+        dateTime: new Date()
+      };
+
+      await storage.createAnalysis({
+        ...analysisResult,
+        isHealthy: analysisResult.diseaseStatus.toLowerCase() === 'healthy'
+      });
+  
       // Broadcast results to all clients
       this.broadcast({
         type: 'analysis_result',
-        data: results
+        data: result
       });
-      
+  
     } catch (error) {
       console.error('Error handling analysis request:', error);
-      this.sendError(ws, 'Analysis request failed');
+      this.sendError(ws, error instanceof Error ? error.message : 'Analysis request failed');
     }
   }
 
@@ -311,4 +339,4 @@ class WebSocketService {
 }
 
 // Export singleton instance
-export const websocketService = new WebSocketService(); 
+export const websocketService = new WebSocketService();
