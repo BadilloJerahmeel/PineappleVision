@@ -25,7 +25,11 @@ export function log(message: string, source = "express") {
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
+    hmr: { 
+      server,
+      port: 24678, // Add a specific port for Vite's WebSocket
+      path: '/vite-hmr' // Add a specific path for Vite's WebSocket
+    },
     allowedHosts: true as const,
   };
 
@@ -36,7 +40,10 @@ export async function setupVite(app: Express, server: Server) {
       ...viteLogger,
       error: (msg, options) => {
         viteLogger.error(msg, options);
-        process.exit(1);
+        // Don't exit on WebSocket errors
+        if (!msg.includes('ws error')) {
+          process.exit(1);
+        }
       },
     },
     server: serverOptions,
