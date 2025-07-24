@@ -36,12 +36,12 @@ models/
 - **Preprocessing**: Normalization to [0,1] range
 
 ### Output Classes
-The model should classify pineapple health into these categories:
+The model classifies pineapple health into these categories:
 1. **Healthy** - No disease detected
-2. **Black Heart** - Internal fruit rot
-3. **Crown Rot** - Crown and top rot disease
-4. **Leaf Spot** - Fungal leaf infections
-5. **Root Rot** - Root system diseases
+2. **Fruit Rot** - Fruit decay and deterioration
+3. **MealybugWilt** - Mealybug infestation and wilting
+4. **Root Rot** - Root system diseases
+5. **No Disease** - Unclassified or uncertain cases
 
 ### Performance Requirements
 - **Minimum Accuracy**: 85% on validation set
@@ -61,7 +61,7 @@ cp /path/to/your/model.h5 models/pineapple-disease-detector/v1.0.0/
 echo '{
   "modelType": "tensorflow",
   "inputSize": {"width": 224, "height": 224},
-  "classes": ["Healthy", "Black Heart", "Crown Rot", "Leaf Spot", "Root Rot"],
+  "classes": ["Healthy", "Fruit Rot", "MealybugWilt", "Root Rot", "No Disease"],
   "confidenceThreshold": 0.6,
   "preprocessing": {
     "normalize": true,
@@ -82,13 +82,13 @@ await modelManager.registerModel('v1.0.0', {
   modelPath: './models/pineapple-disease-detector/v1.0.0/model.h5',
   modelType: 'tensorflow',
   inputSize: { width: 224, height: 224 },
-  classes: ['Healthy', 'Black Heart', 'Crown Rot', 'Leaf Spot', 'Root Rot'],
+  classes: ['Healthy', 'Fruit Rot', 'MealybugWilt', 'Root Rot', 'No Disease'],
   confidenceThreshold: 0.6
 }, {
-  trainingDataSize: 10000,
-  epochs: 100,
-  validationAccuracy: 92.5,
-  testAccuracy: 89.7
+  trainingDataSize: 1000,
+  epochs: 50,
+  validationAccuracy: 0.93,
+  testAccuracy: 0.94
 });
 ```
 

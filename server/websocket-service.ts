@@ -265,9 +265,35 @@ class WebSocketService {
 
           console.log('Processing file:', file.name || 'unnamed');
 
-          // Convert ArrayBuffer to Buffer if needed
+          // Convert base64 string to Buffer
           let imageBuffer: Buffer;
-          if (file.buffer instanceof ArrayBuffer) {
+          if (typeof file.buffer === 'string') {
+            try {
+              // The frontend sends base64 data, decode it to Buffer
+              imageBuffer = Buffer.from(file.buffer, 'base64');
+              console.log(`Decoded base64 buffer for ${file.name || 'unnamed'}, size: ${imageBuffer.length} bytes`);
+              
+              // Validate that we have a valid image buffer
+              if (imageBuffer.length < 100) {
+                throw new Error('Decoded buffer too small to be a valid image');
+              }
+              
+              // Check for common image file signatures
+              const header = imageBuffer.slice(0, 10);
+              const isJPEG = header[0] === 0xFF && header[1] === 0xD8;
+              const isPNG = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
+              const isWebP = header[8] === 0x57 && header[9] === 0x45;
+              
+              if (!isJPEG && !isPNG && !isWebP) {
+                console.warn(`Warning: File ${file.name || 'unnamed'} may not be a valid image format`);
+                console.warn('Header bytes:', Array.from(header).map(b => '0x' + b.toString(16).padStart(2, '0')).join(' '));
+              }
+              
+            } catch (decodeError) {
+              console.error(`Failed to decode base64 for file ${file.name || 'unnamed'}:`, decodeError);
+              throw new Error(`Invalid base64 data for file ${file.name || 'unnamed'}`);
+            }
+          } else if (file.buffer instanceof ArrayBuffer) {
             imageBuffer = Buffer.from(file.buffer);
           } else if (Array.isArray(file.buffer)) {
             imageBuffer = Buffer.from(file.buffer);

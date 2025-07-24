@@ -108,12 +108,17 @@ export class ModelManager {
       modelPath: modelVersion.path,
       modelType: 'tensorflow', // TODO: Make this configurable
       inputSize: { width: 224, height: 224 },
-      classes: ['Healthy', 'Black Heart', 'Crown Rot', 'Leaf Spot', 'Root Rot'],
+      classes: ['Healthy', 'Fruit Rot', 'MealybugWilt', 'Root Rot', 'No Disease'],
       confidenceThreshold: 0.6,
     };
 
     const aiService = new AIService(config);
-    await aiService.initialize();
+    try {
+      await aiService.initialize();
+    } catch (error: any) {
+      console.warn(`Failed to initialize AI model ${version}:`, error.message);
+      console.warn('Continuing in mock mode for development...');
+    }
 
     // Store in models map
     this.models.set(version, aiService);

@@ -6,7 +6,24 @@ import { z } from "zod";
 import { modelManager } from "./model-manager";
 import { aiService } from "./ai-service";
 import { websocketService } from "./websocket-service";
+import { pythonAIService } from "./python-service";
 import multer from 'multer';
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/tiff'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG, and TIFF images are allowed.'));
+    }
+  }
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for PineappleVision application
@@ -134,50 +151,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // AI Model Management Routes
   
-  // Image analysis endpoint (for when AI model is ready)
-  app.post("/api/analyze/images", async (req, res) => {
+  // Image analysis endpoint using Python AI service
+  app.post("/api/analyze/images", upload.single('image'), async (req, res) => {
     try {
-      // TODO: Uncomment when AI model is deployed
-      // const activeModel = modelManager.getActiveModel();
-      // if (!activeModel) {
-      //   return res.status(503).json({ error: "AI model not available" });
-      // }
+      if (!req.file) {
+        return res.status(400).json({ error: "No image file provided" });
+      }
 
-      // For now, return simulated results
-      const analysisResults = [
-        {
-          id: `analysis_${Date.now()}`,
-          fileName: 'uploaded_image.jpg',
-          farmLocation: 'Calauan, Laguna',
-          propagationMethod: Math.random() > 0.5 ? 'Crown Cutting' : 'Suckers',
-          diseaseStatus: Math.random() > 0.7 ? 'Disease Detected' : 'Healthy',
-          confidence: Math.floor(Math.random() * 30) + 70,
-          severity: Math.random() > 0.5 ? 'Mild' : 'Moderate',
-          timestamp: new Date().toISOString()
-        }
-      ];
+      // Check if Python AI service is running
+      if (!pythonAIService.isServiceRunning()) {
+        return res.status(503).json({ 
+          error: "AI service is not available",
+          details: "Python AI service is not running"
+        });
+      }
+
+      // Convert image buffer to base64
+      const imageBase64 = req.file.buffer.toString('base64');
+      const imageDataUrl = `data:${req.file.mimetype};base64,${imageBase64}`;
+
+      // Get prediction from Python AI service
+      const prediction = await pythonAIService.predict(imageDataUrl);
+
+      if (!prediction.success) {
+        return res.status(500).json({
+          error: "Prediction failed",
+          details: prediction.error
+        });
+      }
+
+      // Format response to match frontend expectations
+      const analysisResults = [{
+        id: `analysis_${Date.now()}`,
+        fileName: req.file.originalname || 'uploaded_image.jpg',
+        farmLocation: req.body.farmLocation || 'Unknown',
+        propagationMethod: req.body.propagationMethod || 'Crown Cutting',
+        diseaseStatus: prediction.prediction.disease_status,
+        confidence: prediction.prediction.confidence,
+        severity: prediction.prediction.severity,
+        classProbs: prediction.prediction.class_probabilities,
+        timestamp: prediction.prediction.timestamp
+      }];
 
       res.json({ 
         success: true, 
         results: analysisResults,
-        message: "Analysis completed successfully"
+        message: "Analysis completed successfully using trained AI model"
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      res.status(500).json({ error: "Analysis failed", details: errorMessage });
+      res.status(500).json({ 
+        error: "Analysis failed", 
+        details: errorMessage 
+      });
     }
   });
 
   // Get model status and information
   app.get("/api/models/status", async (req, res) => {
     try {
-      const healthCheck = await modelManager.healthCheck();
+      // Get status from both TensorFlow.js model manager and Python AI service
+      const tfHealthCheck = await modelManager.healthCheck();
+      const pythonHealthCheck = await pythonAIService.healthCheck();
       const modelVersions = modelManager.getModelVersions();
       const performanceMetrics = modelManager.getPerformanceMetrics();
 
+      // Determine overall status
+       let overallStatus: string = 'unhealthy';
+       let activeService = 'none';
+       
+       if (pythonHealthCheck.status === 'healthy') {
+         overallStatus = 'healthy';
+         activeService = 'python';
+       } else if (tfHealthCheck.status === 'healthy') {
+         overallStatus = 'healthy';
+         activeService = 'tensorflow';
+       } else if (pythonHealthCheck.status === 'degraded') {
+         overallStatus = 'degraded';
+         activeService = 'python';
+       }
+
       res.json({
-        status: healthCheck.status,
-        details: healthCheck.details,
+        status: overallStatus,
+        activeService,
+        services: {
+          tensorflow: {
+            status: tfHealthCheck.status,
+            details: tfHealthCheck.details
+          },
+          python: {
+            status: pythonHealthCheck.status,
+            details: pythonHealthCheck.details
+          }
+        },
         availableVersions: modelVersions,
         performance: performanceMetrics
       });

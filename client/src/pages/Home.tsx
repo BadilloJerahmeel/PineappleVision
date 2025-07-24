@@ -210,12 +210,27 @@ const Home = () => {
    * Handles both single and batch upload scenarios with metadata
    */
   const sendAnalysisRequest = async (files: File[], selectedMethod: string, metadata: AnalysisMetadata) => {
-    // Convert files to buffers first
+    // Convert files to base64 for reliable JSON transmission
     const fileBuffers = await Promise.all(files.map(async (file) => {
       const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      
+      // Convert to base64 string using FileReader for better compatibility
+      const base64String = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
+          const base64 = result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      
       return {
         name: file.name,
-        buffer: Array.from(new Uint8Array(arrayBuffer)), // Convert to regular array for JSON serialization
+        buffer: base64String,
         type: file.type
       };
     }));

@@ -59,11 +59,18 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 
-  // Initialize model manager
+  // Initialize model manager (non-blocking)
   const modelManager = new ModelManager();
   
-  // Load the active model
-  modelManager.loadModel('v1.0.0').catch(err => {
-    console.error('Failed to load AI model:', err);
-  });
+  // Load the active model asynchronously without blocking server startup
+  setTimeout(() => {
+    modelManager.loadModel('v1.0.0').catch(err => {
+      console.warn('Failed to load AI model:', err.message);
+      console.warn('Server will continue running in mock mode for development.');
+    });
+  }, 1000);
+  
+  console.log('Server started successfully!');
+  console.log('If you see TensorFlow warnings above, this is normal on Windows development environments.');
+  console.log('The application will work with mock AI responses for development and testing.');
 })();
