@@ -108,7 +108,7 @@ export class ModelManager {
       modelPath: modelVersion.path,
       modelType: 'tensorflow', // TODO: Make this configurable
       inputSize: { width: 224, height: 224 },
-      classes: ['Healthy', 'Black Heart', 'Crown Rot', 'Leaf Spot', 'Root Rot'],
+      classes: ['Healthy', 'Fruit Rot', 'Mealybug Wilt', 'Root Rot'],
       confidenceThreshold: 0.6,
     };
 

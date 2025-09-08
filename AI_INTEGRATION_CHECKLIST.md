@@ -13,9 +13,8 @@ This checklist ensures your trained pineapple disease detection model integrates
 ### ✅ Dataset Validation
 - [ ] Training data includes all 5 disease classes:
   - [ ] Healthy plants
-  - [ ] Black Heart disease
-  - [ ] Crown Rot disease  
-  - [ ] Leaf Spot disease
+  - [ ] Fruit Rot disease
+- [ ] Mealybug Wilt disease
   - [ ] Root Rot disease
 - [ ] Minimum 1,000 images per class
 - [ ] Images represent Calauan, Laguna growing conditions
@@ -42,7 +41,7 @@ cat > models/pineapple-disease-detector/v1.0.0/config.json << EOF
 {
   "modelType": "tensorflow",
   "inputSize": {"width": 224, "height": 224},
-  "classes": ["Healthy", "Black Heart", "Crown Rot", "Leaf Spot", "Root Rot"],
+  "classes": ["Healthy", "Fruit Rot", "Mealybug Wilt", "Root Rot"],
   "confidenceThreshold": 0.6,
   "preprocessing": {
     "normalize": true,
@@ -90,7 +89,7 @@ export const defaultAIConfig: AIModelConfig = {
   modelPath: './models/pineapple-disease-detector/v1.0.0/model.h5',
   modelType: 'tensorflow', // or 'pytorch' or 'onnx'
   inputSize: { width: 224, height: 224 }, // Match your model's input
-  classes: ['Healthy', 'Black Heart', 'Crown Rot', 'Leaf Spot', 'Root Rot'],
+  classes: ['Healthy', 'Fruit Rot', 'Mealybug Wilt', 'Root Rot'],
   confidenceThreshold: 0.6, // Adjust based on your model's performance
 };
 ```

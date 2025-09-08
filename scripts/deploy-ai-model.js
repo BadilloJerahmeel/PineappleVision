@@ -58,7 +58,7 @@ async function deployModel() {
     const config = {
       modelType: modelType,
       inputSize: { width: 224, height: 224 },
-      classes: ['Healthy', 'Black Heart', 'Crown Rot', 'Leaf Spot', 'Root Rot'],
+      classes: ['Healthy', 'Fruit Rot', 'Mealybug Wilt', 'Root Rot'],
       confidenceThreshold: 0.6,
       preprocessing: {
         normalize: true,

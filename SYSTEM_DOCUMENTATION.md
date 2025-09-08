@@ -1,5 +1,44 @@
 # PineappleVision System Documentation
 
+# PL
+### Primary Languages
+1. 1.
+   TypeScript/JavaScript
+- Main server files ( *.ts )
+- React client components ( *.tsx )
+- Configuration files ( tsconfig.json , vite.config.ts )
+2. 1.
+   Python
+- AI/ML processing ( python_inference.py )
+- TensorFlow model handling
+- Virtual environment ( tfenv/ )
+### Web Technologies
+1. 1.
+   HTML/CSS
+- Client interface ( index.html )
+- Tailwind CSS ( tailwind.config.ts )
+- PostCSS ( postcss.config.js )
+### Configuration & Data
+1. 1.
+   JSON
+- Package management ( package.json )
+- Model registry ( model-registry.json )
+- Project configuration files
+### Framework Stack
+1. 1.
+   Frontend
+- React (TypeScript)
+- Vite bundler
+- Tailwind CSS
+2. 1.
+   Backend
+- Node.js/TypeScript server
+- Python AI services
+- WebSocket for real-time communication
+Note: The system uses a hybrid approach, combining TypeScript for the main application and Python specifically for AI/ML operations with TensorFlow.
+
+
+
 ## Table of Contents
 
 1. [System Overview](#system-overview)
@@ -307,9 +346,8 @@ interface AIModelConfig {
 
 **Supported Disease Classes**:
 1. **Healthy** - No disease detected, normal plant condition
-2. **Black Heart** - Internal fruit rot affecting core tissues
-3. **Crown Rot** - Fungal infection of crown and upper plant parts
-4. **Leaf Spot** - Fungal leaf infections with visible spotting
+2. **Fruit Rot** - Internal fruit rot
+3. **Mealybug Wilt** - Crown and top rot disease
 5. **Root Rot** - Root system diseases affecting nutrient uptake
 
 **Confidence Scoring**:
@@ -541,7 +579,7 @@ project/
    {
      "modelType": "tensorflow",
      "inputSize": {"width": 224, "height": 224},
-     "classes": ["Healthy", "Black Heart", "Crown Rot", "Leaf Spot", "Root Rot"],
+     "classes": ["Healthy", "Fruit Rot", "Mealybug Wilt", "Root Rot"],
      "confidenceThreshold": 0.6
    }
    ```

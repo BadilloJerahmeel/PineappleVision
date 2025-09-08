@@ -51,24 +51,24 @@ const AboutUsContent = () => {
   const teamMembers = [
     {
       name: "Robong, Dexter D.",
-      role: "Frontend Developer & Model Integration",
-      photo: "/golem.jpg",
-      description: "Specializes in React development and AI model integration. Responsible for creating interactive user interfaces and converting machine learning models with TensorFlow.",
-      skills: ["React", "TensorFlow", "JavaScript", "Computer Vision"]
+      role: "",
+      photo: "",
+      description: "",
+      skills: [""]
     },
     {
       name: "Badillo, Jerahmeel A.",
-      role: "Backend Developer & Data Specialist",
+      role: "",
       photo: "/moks.jpg",
-      description: "Expert in server-side development and data processing. Manages database operations, API development, and ensures robust data preprocessing for the system.",
-      skills: ["Django", "Python", "MongoDB", "Data Processing"]
+      description: "",
+      skills: [""]
     },
     {
       name: "Calapiao, Jan Reimon S.",
-      role: "UX/UI Designer & System Tester",
-      photo: "/renz.jpg",
-      description: "Focuses on user experience design and comprehensive system testing. Ensures the application is user-friendly and performs testing across mobile and desktop platforms.",
-      skills: ["Figma", "UX Research", "QA Testing", "Design Systems"]
+      role: "",
+      photo: "",
+      description: "",
+      skills: [""]
     }
   ];
 

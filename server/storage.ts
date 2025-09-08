@@ -1,4 +1,5 @@
 import { users, farms, analyses, type User, type InsertUser, type Farm, type InsertFarm, type Analysis, type InsertAnalysis } from "@shared/schema";
+import { DbStorage } from './db-storage';
 
 // Enhanced storage interface with methods for PineappleVision functionality
 export interface IStorage {
@@ -243,4 +244,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = process.env.NODE_ENV === 'production' ? new DbStorage() : new MemStorage();
